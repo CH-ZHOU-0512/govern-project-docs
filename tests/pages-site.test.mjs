@@ -17,6 +17,19 @@ test("Pages landing page exposes canonical and crawler metadata", async () => {
   assert.match(html, /<meta name="robots" content="index, follow,/);
   assert.match(html, /"@type": "SoftwareSourceCode"/);
   assert.match(html, /OAI|AI Agent/);
+  assert.match(html, /<script defer src="\.\/script\.js"><\/script>/);
+});
+
+test("Pages motion remains progressive and respects reduced-motion preferences", async () => {
+  const [script, styles] = await Promise.all([
+    text("site/script.js"),
+    text("site/styles.css"),
+  ]);
+
+  assert.match(script, /IntersectionObserver/);
+  assert.match(script, /prefers-reduced-motion: reduce/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(styles, /\.js \[data-reveal\]/);
 });
 
 test("Pages crawler files explicitly allow OAI-SearchBot", async () => {

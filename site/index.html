@@ -26,7 +26,9 @@
     <meta name="twitter:description" content="让项目文档成为可检索、可验证的工程资产。">
     <meta name="twitter:image" content="https://ch-zhou-0512.github.io/govern-project-docs/assets/share-cover.png">
 
+    <script>document.documentElement.classList.add("js")</script>
     <link rel="stylesheet" href="./styles.css">
+    <script defer src="./script.js"></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -60,6 +62,12 @@
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <div class="page-ambient" aria-hidden="true">
+      <i class="ambient-orb ambient-orb-one"></i>
+      <i class="ambient-orb ambient-orb-two"></i>
+      <i class="ambient-grid"></i>
+    </div>
 
     <header class="site-header">
       <nav class="nav shell" aria-label="主导航">
@@ -88,59 +96,76 @@
             <a class="button button-secondary" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Getting-Started">快速上手</a>
           </div>
           <ul class="hero-facts" aria-label="项目特点">
-            <li><strong>0</strong><span>运行时依赖</span></li>
-            <li><strong>8</strong><span>自动化测试</span></li>
+            <li><strong data-count="0">0</strong><span>运行时依赖</span></li>
+            <li><strong data-count="12">12</strong><span>自动化测试</span></li>
             <li><strong>MIT</strong><span>开源许可</span></li>
           </ul>
         </div>
 
-        <div class="hero-visual" aria-label="文档治理流程预览">
-          <div class="window-bar">
-            <span></span><span></span><span></span>
-            <code>docs-governance / overview</code>
+        <div class="hero-stage">
+          <div class="hero-visual spotlight-card" data-tilt aria-label="文档治理流程预览">
+            <div class="window-bar">
+              <span></span><span></span><span></span>
+              <code>docs-governance / overview</code>
+            </div>
+            <img src="./assets/share-cover.png" width="1731" height="909" alt="govern-project-docs：从文档混乱到可治理知识的流程概览">
+            <div class="status-pill"><span></span> CI checks passing</div>
           </div>
-          <img src="./assets/share-cover.png" width="1731" height="909" alt="govern-project-docs：从文档混乱到可治理知识的流程概览">
-          <div class="status-pill"><span></span> CI checks passing</div>
+          <div class="float-card float-card-top" aria-hidden="true"><b>authority</b><span>single source of truth</span></div>
+          <div class="float-card float-card-bottom" aria-hidden="true"><i></i><span>index freshness</span><strong>100%</strong></div>
         </div>
+        <a class="scroll-cue" href="#why" aria-label="继续了解项目"><span></span> Scroll to inspect</a>
       </section>
 
       <section class="signal-strip" aria-label="核心原则">
-        <div class="shell signal-grid">
-          <p><span>01</span> One active authority</p>
-          <p><span>02</span> Progressive retrieval</p>
-          <p><span>03</span> Deterministic indexes</p>
-          <p><span>04</span> CI-enforced freshness</p>
+        <div class="signal-track">
+          <div class="signal-group">
+            <p><span>01</span> One active authority</p>
+            <p><span>02</span> Progressive retrieval</p>
+            <p><span>03</span> Deterministic indexes</p>
+            <p><span>04</span> CI-enforced freshness</p>
+          </div>
+          <div class="signal-group" aria-hidden="true">
+            <p><span>01</span> One active authority</p>
+            <p><span>02</span> Progressive retrieval</p>
+            <p><span>03</span> Deterministic indexes</p>
+            <p><span>04</span> CI-enforced freshness</p>
+          </div>
         </div>
       </section>
 
-      <section class="problem shell section">
-        <div class="section-heading">
+      <section class="problem shell section" id="why">
+        <div class="problem-layout">
+        <div class="section-heading" data-reveal>
           <p class="kicker">WHY IT EXISTS</p>
           <h2>文档多，不等于知识清楚</h2>
           <p>问题通常不是“缺文档”，而是同一个事实散落在 README、状态页、计划和交接记录中。它们开始互相冲突，人和 Agent 都不知道该信谁。</p>
+          <div class="section-note"><span></span> 文档债务通常从“复制一份方便修改”开始</div>
         </div>
         <div class="problem-grid">
-          <article>
+          <article class="spotlight-card" data-reveal>
             <span class="card-index">A</span>
-            <h3>重复事实</h3>
-            <p>同一状态维护在多个活跃文档里，修改一次就留下数个过期副本。</p>
+            <div><h3>重复事实</h3>
+            <p>同一状态维护在多个活跃文档里，修改一次就留下数个过期副本。</p></div>
+            <span class="card-signal" aria-hidden="true">01 → 04</span>
           </article>
-          <article>
+          <article class="spotlight-card" data-reveal>
             <span class="card-index">B</span>
             <h3>权威不明</h3>
             <p>API、Schema 与依赖信息从机器契约复制到 Markdown，随后悄悄漂移。</p>
           </article>
-          <article>
+          <article class="spotlight-card" data-reveal>
             <span class="card-index">C</span>
             <h3>上下文浪费</h3>
             <p>AI Agent 必须读取大量历史噪声，才能找到完成当前任务所需的少量事实。</p>
           </article>
         </div>
+        </div>
       </section>
 
       <section class="workflow section" id="workflow">
         <div class="shell">
-          <div class="section-heading split-heading">
+          <div class="section-heading split-heading" data-reveal>
             <div>
               <p class="kicker">THE WORKFLOW</p>
               <h2>先审计，再治理，最后持续约束</h2>
@@ -148,8 +173,8 @@
             <p>从只读报告开始，不贸然移动或删除。每一步都保留可验证的边界。</p>
           </div>
 
-          <ol class="workflow-list">
-            <li>
+          <ol class="workflow-list" data-reveal>
+            <li class="workflow-step">
               <div class="step-number">01</div>
               <div>
                 <p class="step-label">AUDIT</p>
@@ -158,7 +183,7 @@
               </div>
               <code>node scripts/audit-docs.mjs --repo .</code>
             </li>
-            <li>
+            <li class="workflow-step">
               <div class="step-number">02</div>
               <div>
                 <p class="step-label">GOVERN</p>
@@ -167,7 +192,7 @@
               </div>
               <code>authority → routing → evidence</code>
             </li>
-            <li>
+            <li class="workflow-step">
               <div class="step-number">03</div>
               <div>
                 <p class="step-label">ENFORCE</p>
@@ -181,19 +206,22 @@
       </section>
 
       <section class="demo shell section" aria-labelledby="demo-title">
-        <div class="demo-frame">
+        <div class="demo-frame spotlight-card" data-reveal>
           <div class="demo-copy">
             <p class="kicker">FROM CHAOS TO GOVERNANCE</p>
             <h2 id="demo-title">把隐性的维护习惯，变成显式、可检查的系统</h2>
             <p>迁移旧知识、指定唯一权威、按需检索、归档证据，再由自动化检查阻止体系退化。</p>
             <a class="text-link" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Governance-Model">阅读治理模型 <span aria-hidden="true">→</span></a>
           </div>
-          <img src="./assets/readme-demo.png" width="1600" height="900" loading="lazy" alt="从文档混乱到可治理知识：审计、迁移、索引、执行的完整流程">
+          <figure class="demo-media">
+            <img src="./assets/readme-demo.png" width="1600" height="900" loading="lazy" data-parallax alt="从文档混乱到可治理知识：审计、迁移、索引、执行的完整流程">
+            <figcaption><span></span> Authority graph · deterministic output</figcaption>
+          </figure>
         </div>
       </section>
 
       <section class="toolkit section" id="toolkit">
-        <div class="shell toolkit-grid">
+        <div class="shell toolkit-grid" data-reveal>
           <div class="toolkit-copy">
             <p class="kicker">ZERO-DEPENDENCY TOOLKIT</p>
             <h2>克隆即用，先从只读审计开始</h2>
@@ -204,8 +232,8 @@
               <span>CI ready</span>
             </div>
           </div>
-          <div class="terminal" aria-label="终端命令示例">
-            <div class="terminal-top"><span></span><span></span><span></span><b>terminal</b></div>
+          <div class="terminal spotlight-card" aria-label="终端命令示例">
+            <div class="terminal-top"><span></span><span></span><span></span><b>terminal</b><button class="copy-command" type="button" data-copy="git clone https://github.com/CH-ZHOU-0512/govern-project-docs.git" aria-label="复制克隆命令">Copy</button></div>
             <pre><code><span class="prompt">$</span> git clone https://github.com/<br>  CH-ZHOU-0512/govern-project-docs.git
 
 <span class="prompt">$</span> cd govern-project-docs
@@ -219,7 +247,7 @@
         </div>
       </section>
 
-      <section class="cta shell section">
+      <section class="cta shell section spotlight-card" data-reveal>
         <div>
           <p class="kicker">OPEN SOURCE · MIT</p>
           <h2>让下一次迭代，不再增加文档债务</h2>
