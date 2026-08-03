@@ -1,7 +1,10 @@
 ---
+doc-id: DOC-AI-ENGINEERING-POLICY
 status: active
 owner: engineering
 last-reviewed: YYYY-MM-DD
+authority-for:
+  - repository.ai-change-policy
 ---
 
 # AI engineering and change records

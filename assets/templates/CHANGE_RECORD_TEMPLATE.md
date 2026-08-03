@@ -1,4 +1,5 @@
 ---
+doc-id: DOC-CHANGE-TASK-000
 id: TASK-000
 type: change
 status: draft

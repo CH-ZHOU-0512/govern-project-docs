@@ -16,6 +16,7 @@ import {
   countLines,
   classifyMarkdownTarget,
   extractMarkdownLinks,
+  loadGovernanceConfig,
   markdownAnchors,
   parseFrontMatter,
 } from "../assets/runtime/docs-toolkit.mjs";
@@ -40,13 +41,19 @@ const linksScript = join(
   "runtime",
   "check-markdown-links.mjs",
 );
+const templateConfigPath = join(
+  repositoryRoot,
+  "assets",
+  "templates",
+  "docs-governance.config.json",
+);
 
 function createRepository(t, overrides = {}) {
   const path = mkdtempSync(join(tmpdir(), "govern-project-docs-"));
   t.after(() => rmSync(path, { force: true, recursive: true }));
   const config = {
     $schema: "./docs-governance.schema.json",
-    schemaVersion: 1,
+    schemaVersion: 2,
     docsRoot: "docs",
     generatedRoot: "docs/generated",
     activeDirectories: [
@@ -58,8 +65,10 @@ function createRepository(t, overrides = {}) {
       "product",
     ],
     excludedFromMetadata: ["archive", "generated", "reference", "source"],
-    requiredMetadata: ["status", "owner", "last-reviewed"],
+    requiredMetadata: ["doc-id", "status", "owner", "last-reviewed"],
     allowedStatuses: ["draft", "accepted", "active", "superseded", "archived"],
+    authorityStatuses: ["accepted", "active"],
+    authorityKeyPattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$",
     lineLimits: { default: 500, "README.md": 300 },
     routingPaths: ["docs/README.md"],
     routingPatterns: ["^docs/domains/(?:[^/]+/)?README\\.md$"],
@@ -76,8 +85,17 @@ function write(root, path, content) {
   writeFileSync(absolutePath, content, "utf8");
 }
 
-function activeDocument(title, body = "") {
-  return `---\nstatus: active\nowner: engineering\nlast-reviewed: 2026-08-03\n---\n\n# ${title}\n\n${body}\n`;
+function activeDocument(title, body = "", metadata = {}) {
+  const documentId =
+    metadata.docId ??
+    `DOC-${title.toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+  const authorityFor = metadata.authorityFor ?? [];
+  const supersedes = metadata.supersedes ?? [];
+  const list = (name, values) =>
+    values.length > 0
+      ? `${name}:\n${values.map((value) => `  - ${value}`).join("\n")}\n`
+      : "";
+  return `---\ndoc-id: ${documentId}\nstatus: active\nowner: engineering\nlast-reviewed: 2026-08-03\n${list("authority-for", authorityFor)}${list("supersedes", supersedes)}---\n\n# ${title}\n\n${body}\n`;
 }
 
 function run(script, args, cwd = repositoryRoot) {
@@ -103,6 +121,16 @@ test("shared parsers support quoted scalars, stable line counts, and rich links"
     ),
     { owner: "docs team", status: "active" },
   );
+  assert.deepEqual(
+    parseFrontMatter(
+      "---\ndoc-id: DOC-PAYMENTS\nauthority-for:\n  - payments.architecture\n  - 'payments.retry-policy'\nsupersedes: [DOC-OLD, \"DOC-OLDER\"]\n---\n# Title\n",
+    ),
+    {
+      "authority-for": ["payments.architecture", "payments.retry-policy"],
+      "doc-id": "DOC-PAYMENTS",
+      supersedes: ["DOC-OLD", "DOC-OLDER"],
+    },
+  );
   assert.equal(countLines("a\n"), 1);
   assert.equal(countLines("a\n\n"), 2);
   assert.equal(classifyMarkdownTarget("C:\\docs\\guide.md").type, "absolute");
@@ -126,9 +154,23 @@ test("shared parsers support quoted scalars, stable line counts, and rich links"
   );
 });
 
+test("authority schema v2 template is loadable", () => {
+  const config = loadGovernanceConfig(templateConfigPath, repositoryRoot);
+  assert.equal(config.schemaVersion, 2);
+  assert.deepEqual(config.authorityStatuses, ["accepted", "active"]);
+  assert.match("payments.retry-policy", new RegExp(config.authorityKeyPattern));
+  assert.ok(config.requiredMetadata.includes("doc-id"));
+});
+
 test("document index is deterministic, queryable, encoded, and freshness checked", (t) => {
   const root = createRepository(t);
-  write(root, "docs/README.md", activeDocument("Home", "ADR-001 Choose one owner."));
+  write(
+    root,
+    "docs/README.md",
+    activeDocument("Home", "ADR-001 Choose one owner.", {
+      authorityFor: ["repository.documentation"],
+    }),
+  );
   write(
     root,
     "docs/domains/order flow/README (draft).md",
@@ -154,6 +196,19 @@ test("document index is deterministic, queryable, encoded, and freshness checked
   const queryOutput = JSON.parse(query.stdout);
   assert.equal(queryOutput.matchCount, 1);
   assert.equal(queryOutput.matches[0].identifierMatches[0].id, "ADR-001");
+
+  const authorityQuery = run(indexScript, [
+    "query",
+    "repository.documentation",
+    "--repo",
+    root,
+  ]);
+  assert.equal(authorityQuery.status, 0, authorityQuery.stderr);
+  const authorityOutput = JSON.parse(authorityQuery.stdout);
+  assert.equal(authorityOutput.matches[0].docId, "DOC-HOME");
+  assert.deepEqual(authorityOutput.matches[0].authorityFor, [
+    "repository.documentation",
+  ]);
 
   const current = run(indexScript, ["check", "--repo", root]);
   assert.equal(current.status, 0, current.stderr);
@@ -222,7 +277,7 @@ test("governance checks every active document and honors configured exclusions",
   write(
     root,
     "docs/STATUS.md",
-    '---\nstatus: "active"\nowner: engineering\nlast-reviewed: 2026-08-03\n---\n\n# Status\n',
+    '---\ndoc-id: DOC-STATUS\nstatus: "active"\nowner: engineering\nlast-reviewed: 2026-08-03\n---\n\n# Status\n',
   );
   const valid = run(governanceScript, ["--repo", root]);
   assert.equal(valid.status, 0, valid.stderr);
@@ -250,6 +305,108 @@ test("governance validates real dates and archive boundaries", (t) => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /last-reviewed must be a real YYYY-MM-DD date/);
   assert.match(result.stderr, /archived documents cannot be active/);
+});
+
+test("schema version 1 configurations remain compatible", (t) => {
+  const root = createRepository(t, {
+    schemaVersion: 1,
+    authorityKeyPattern: undefined,
+    authorityStatuses: undefined,
+    allowedStatuses: ["draft"],
+    requiredMetadata: ["status", "owner", "last-reviewed"],
+  });
+  write(
+    root,
+    "docs/README.md",
+    "---\nstatus: draft\nowner: engineering\nlast-reviewed: 2026-08-03\n---\n\n# Home\n",
+  );
+  const result = run(governanceScript, ["--repo", root]);
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test("authority engine enforces unique active claims and document IDs", (t) => {
+  const root = createRepository(t);
+  write(
+    root,
+    "docs/README.md",
+    activeDocument("Home", "", {
+      authorityFor: ["payments.architecture"],
+      docId: "DOC-HOME",
+    }),
+  );
+  write(
+    root,
+    "docs/domains/payments/README.md",
+    activeDocument("Payments", "", {
+      authorityFor: ["payments.architecture"],
+      docId: "DOC-PAYMENTS",
+    }),
+  );
+  write(
+    root,
+    "docs/product/duplicate.md",
+    activeDocument("Duplicate", "", {
+      authorityFor: ["Payments Architecture"],
+      docId: "DOC-PAYMENTS",
+    }),
+  );
+  write(
+    root,
+    "docs/archive/claimed.md",
+    "---\ndoc-id: DOC-ARCHIVED\nstatus: archived\nauthority-for: [payments.archived]\n---\n\n# Archived\n",
+  );
+
+  const result = run(governanceScript, ["--repo", root]);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /authority payments\.architecture has multiple active documents/);
+  assert.match(result.stderr, /duplicate doc-id DOC-PAYMENTS/);
+  assert.match(result.stderr, /authority-for contains invalid key Payments Architecture/);
+  assert.match(result.stderr, /archived documents cannot declare authority-for/);
+});
+
+test("authority engine validates reciprocal supersession without cycles", (t) => {
+  const root = createRepository(t);
+  write(
+    root,
+    "docs/README.md",
+    activeDocument("Current", "", {
+      authorityFor: ["payments.architecture"],
+      docId: "DOC-CURRENT",
+      supersedes: ["DOC-OLD"],
+    }),
+  );
+  write(
+    root,
+    "docs/archive/old.md",
+    "---\ndoc-id: DOC-OLD\nstatus: superseded\nowner: engineering\nlast-reviewed: 2026-08-02\nsuperseded-by: DOC-CURRENT\n---\n\n# Old\n",
+  );
+
+  const valid = run(governanceScript, ["--repo", root]);
+  assert.equal(valid.status, 0, valid.stderr);
+
+  write(
+    root,
+    "docs/archive/old.md",
+    "---\ndoc-id: DOC-OLD\nstatus: superseded\nowner: engineering\nlast-reviewed: 2026-08-02\nsuperseded-by: DOC-MISSING\n---\n\n# Old\n",
+  );
+  const invalid = run(governanceScript, ["--repo", root]);
+  assert.equal(invalid.status, 1);
+  assert.match(invalid.stderr, /superseded-by references unknown doc-id DOC-MISSING/);
+  assert.match(invalid.stderr, /does not declare superseded-by DOC-CURRENT/);
+
+  write(
+    root,
+    "docs/README.md",
+    "---\ndoc-id: DOC-CURRENT\nstatus: active\nowner: engineering\nlast-reviewed: 2026-08-03\nauthority-for: [payments.architecture]\nsupersedes: [DOC-OLD]\nsuperseded-by: DOC-OLD\n---\n\n# Current\n",
+  );
+  write(
+    root,
+    "docs/archive/old.md",
+    "---\ndoc-id: DOC-OLD\nstatus: superseded\nowner: engineering\nlast-reviewed: 2026-08-02\nsupersedes: [DOC-CURRENT]\nsuperseded-by: DOC-CURRENT\n---\n\n# Old\n",
+  );
+  const cyclic = run(governanceScript, ["--repo", root]);
+  assert.equal(cyclic.status, 1);
+  assert.match(cyclic.stderr, /supersession cycle detected/);
 });
 
 test("link checker handles complex local destinations and ignores code fences", (t) => {
@@ -287,6 +444,7 @@ test("audit respects ignored directories and reports complete active metadata", 
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.equal(report.markdownFiles, 1);
+  assert.deepEqual(report.missingDocumentIds, ["docs/README.md"]);
   assert.deepEqual(report.missingMetadata, ["docs/README.md"]);
 });
 
@@ -309,4 +467,19 @@ test("CLI and configuration errors fail before doing work", (t) => {
   assert.equal(invalidConfig.status, 2);
   assert.match(invalidConfig.stderr, /stableIdPrefixes cannot be empty/);
   assert.match(invalidConfig.stderr, /unknown configuration field: unexpectedSetting/);
+
+  const invalidAuthorityRoot = createRepository(t, {
+    authorityKeyPattern: "[",
+    authorityStatuses: ["active", "retired"],
+  });
+  const invalidAuthority = run(governanceScript, [
+    "--repo",
+    invalidAuthorityRoot,
+  ]);
+  assert.equal(invalidAuthority.status, 2);
+  assert.match(invalidAuthority.stderr, /authorityKeyPattern must be a valid regular expression/);
+  assert.match(
+    invalidAuthority.stderr,
+    /authorityStatuses contains status not present in allowedStatuses: retired/,
+  );
 });

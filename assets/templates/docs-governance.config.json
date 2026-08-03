@@ -1,6 +1,6 @@
 {
   "$schema": "./docs-governance.schema.json",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "docsRoot": "docs",
   "generatedRoot": "docs/generated",
   "activeDirectories": [
@@ -12,8 +12,10 @@
     "product"
   ],
   "excludedFromMetadata": ["archive", "generated", "reference", "source"],
-  "requiredMetadata": ["status", "owner", "last-reviewed"],
+  "requiredMetadata": ["doc-id", "status", "owner", "last-reviewed"],
   "allowedStatuses": ["draft", "accepted", "active", "superseded", "archived"],
+  "authorityStatuses": ["accepted", "active"],
+  "authorityKeyPattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$",
   "lineLimits": {
     "default": 500,
     "README.md": 300,

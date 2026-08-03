@@ -148,18 +148,79 @@ function parseYamlScalar(rawValue) {
   return value;
 }
 
+function parseYamlInlineArray(rawValue) {
+  const value = stripYamlComment(rawValue.trim());
+  if (!value.startsWith("[") || !value.endsWith("]")) return undefined;
+  const inner = value.slice(1, -1).trim();
+  if (!inner) return [];
+
+  const items = [];
+  let current = "";
+  let quote;
+  for (let index = 0; index < inner.length; index += 1) {
+    const character = inner[index];
+    if (quote) {
+      current += character;
+      if (character === quote && inner[index - 1] !== "\\") quote = undefined;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+      current += character;
+      continue;
+    }
+    if (character === ",") {
+      items.push(parseYamlScalar(current));
+      current = "";
+      continue;
+    }
+    current += character;
+  }
+  if (quote) return undefined;
+  items.push(parseYamlScalar(current));
+  return items;
+}
+
+function parseYamlValue(rawValue) {
+  return parseYamlInlineArray(rawValue) ?? parseYamlScalar(rawValue);
+}
+
 export function parseFrontMatter(content) {
   const lines = content.replace(/^\uFEFF/, "").split(/\r?\n/);
   if (lines[0] !== "---") return undefined;
   const closingIndex = lines.indexOf("---", 1);
   if (closingIndex < 0) return undefined;
   const metadata = {};
-  for (const line of lines.slice(1, closingIndex)) {
+  const frontMatterLines = lines.slice(1, closingIndex);
+  for (let index = 0; index < frontMatterLines.length; index += 1) {
+    const line = frontMatterLines[index];
     const match = /^([a-z][a-z0-9-]*):(?:\s*(.*))?$/.exec(line);
     if (!match) continue;
-    metadata[match[1]] = parseYamlScalar(match[2] ?? "");
+    const rawValue = match[2] ?? "";
+    if (rawValue.trim()) {
+      metadata[match[1]] = parseYamlValue(rawValue);
+      continue;
+    }
+
+    const items = [];
+    let nextIndex = index + 1;
+    for (; nextIndex < frontMatterLines.length; nextIndex += 1) {
+      const candidate = frontMatterLines[nextIndex];
+      if (/^\s*(?:#.*)?$/.test(candidate)) continue;
+      const itemMatch = /^\s{2,}-\s+(.+)$/.exec(candidate);
+      if (!itemMatch) break;
+      items.push(parseYamlScalar(itemMatch[1]));
+    }
+    metadata[match[1]] = items.length > 0 ? items : "";
+    if (items.length > 0) index = nextIndex - 1;
   }
   return metadata;
+}
+
+export function metadataStringArray(metadata, name) {
+  const value = metadata?.[name];
+  if (value === undefined || value === null || value === "") return [];
+  return Array.isArray(value) ? value : [value];
 }
 
 export function countLines(content) {
@@ -388,6 +449,8 @@ export function loadGovernanceConfig(configPath, repositoryRoot) {
     "$schema",
     "activeDirectories",
     "allowedStatuses",
+    "authorityKeyPattern",
+    "authorityStatuses",
     "docsRoot",
     "excludedFromMetadata",
     "generatedRoot",
@@ -401,7 +464,9 @@ export function loadGovernanceConfig(configPath, repositoryRoot) {
   for (const key of Object.keys(config)) {
     if (!allowedKeys.has(key)) errors.push(`unknown configuration field: ${key}`);
   }
-  if (config.schemaVersion !== 1) errors.push("schemaVersion must be 1");
+  if (![1, 2].includes(config.schemaVersion)) {
+    errors.push("schemaVersion must be 1 or 2");
+  }
   for (const name of ["docsRoot", "generatedRoot"]) {
     const value = config[name];
     if (typeof value !== "string" || !value.trim()) {
@@ -425,6 +490,25 @@ export function loadGovernanceConfig(configPath, repositoryRoot) {
     ...stringArrayErrors(config, "stableIdPrefixes", { nonEmpty: true }),
   );
   if (
+    config.schemaVersion === 2 ||
+    Object.hasOwn(config, "authorityStatuses")
+  ) {
+    errors.push(
+      ...stringArrayErrors(config, "authorityStatuses", { nonEmpty: true }),
+    );
+  }
+  if (
+    config.schemaVersion === 2 ||
+    Object.hasOwn(config, "authorityKeyPattern")
+  ) {
+    if (
+      typeof config.authorityKeyPattern !== "string" ||
+      !config.authorityKeyPattern
+    ) {
+      errors.push("authorityKeyPattern must be a non-empty string");
+    }
+  }
+  if (
     !config.lineLimits ||
     typeof config.lineLimits !== "object" ||
     Array.isArray(config.lineLimits)
@@ -447,6 +531,29 @@ export function loadGovernanceConfig(configPath, repositoryRoot) {
       errors.push(`routingPatterns contains invalid regular expression: ${pattern}`);
     }
   }
+  const authorityKeyPattern =
+    typeof config.authorityKeyPattern === "string" &&
+    config.authorityKeyPattern
+      ? config.authorityKeyPattern
+      : "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$";
+  try {
+    new RegExp(authorityKeyPattern);
+  } catch {
+    errors.push("authorityKeyPattern must be a valid regular expression");
+  }
+  const authorityStatuses = Array.isArray(config.authorityStatuses)
+    ? config.authorityStatuses
+    : ["accepted", "active"].filter((status) =>
+        config.allowedStatuses?.includes(status),
+      );
+  if (config.schemaVersion === 2 && authorityStatuses.length === 0) {
+    errors.push("authorityStatuses must include at least one allowed status");
+  }
+  for (const status of authorityStatuses) {
+    if (!config.allowedStatuses?.includes(status)) {
+      errors.push(`authorityStatuses contains status not present in allowedStatuses: ${status}`);
+    }
+  }
   for (const prefix of config.stableIdPrefixes ?? []) {
     if (!/^[A-Z][A-Z0-9]*$/.test(prefix)) {
       errors.push(`stableIdPrefixes contains invalid prefix: ${prefix}`);
@@ -467,7 +574,7 @@ export function loadGovernanceConfig(configPath, repositoryRoot) {
   if (errors.length > 0) {
     throw new Error(`Invalid documentation governance config:\n- ${errors.join("\n- ")}`);
   }
-  return config;
+  return { ...config, authorityKeyPattern, authorityStatuses };
 }
 
 export function isValidIsoDate(value) {

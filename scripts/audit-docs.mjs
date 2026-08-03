@@ -10,6 +10,7 @@ import {
   extractMarkdownLinks,
   isPathWithinRoot,
   markdownAnchors,
+  metadataStringArray,
   parseCliArguments,
   parseFrontMatter,
   repositoryPath as relativeRepositoryPath,
@@ -111,13 +112,17 @@ const documents = files.map((absolutePath) => {
   const metadata = parseFrontMatter(content) ?? {};
   return {
     absolutePath,
+    authorityFor: metadataStringArray(metadata, "authority-for"),
     category: categoryFor(path),
     charCount: content.length,
     lastReviewed: metadata["last-reviewed"] ?? null,
     lineCount: countLines(content),
+    docId: metadata["doc-id"] ?? null,
     owner: metadata.owner ?? null,
     path,
     status: metadata.status ?? null,
+    supersededBy: metadataStringArray(metadata, "superseded-by"),
+    supersedes: metadataStringArray(metadata, "supersedes"),
     title: firstHeading(lines) ?? basename(path),
   };
 });
@@ -137,6 +142,9 @@ const missingMetadata = documents
       (!document.status || !document.owner || !document.lastReviewed),
   )
   .map((document) => document.path);
+const missingDocumentIds = documents
+  .filter((document) => isActiveDoc(document.path) && !document.docId)
+  .map((document) => document.path);
 const reviewCandidates = documents
   .map((document) => ({ path: document.path, reason: reviewReason(document) }))
   .filter((candidate) => candidate.reason);
@@ -150,6 +158,25 @@ for (const document of documents) {
 const duplicateTitles = [...titleGroups.entries()]
   .filter(([, paths]) => paths.length > 1)
   .map(([title, paths]) => ({ paths, title }));
+
+const authorityGroups = new Map();
+for (const document of documents) {
+  if (
+    !isActiveDoc(document.path) ||
+    !["accepted", "active"].includes(document.status)
+  ) {
+    continue;
+  }
+  for (const authority of document.authorityFor) {
+    authorityGroups.set(authority, [
+      ...(authorityGroups.get(authority) ?? []),
+      document.path,
+    ]);
+  }
+}
+const duplicateAuthorityClaims = [...authorityGroups.entries()]
+  .filter(([, paths]) => paths.length > 1)
+  .map(([authority, paths]) => ({ authority, paths }));
 
 const brokenLinks = [];
 const nonPortableLinks = [];
@@ -233,16 +260,18 @@ const report = {
   brokenLinks,
   categoryCounts,
   duplicateTitles,
+  duplicateAuthorityClaims,
   largestDocuments: documents
     .map(({ charCount, lineCount, path }) => ({ charCount, lineCount, path }))
     .sort((left, right) => right.charCount - left.charCount)
     .slice(0, 15),
   markdownFiles: documents.length,
+  missingDocumentIds,
   missingMetadata,
   nonPortableLinks,
   repository: repositoryRoot,
   reviewCandidates,
-  schemaVersion: 1,
+  schemaVersion: 2,
 };
 
 if (jsonOutput) {
@@ -252,7 +281,11 @@ if (jsonOutput) {
   console.log(`Markdown files: ${report.markdownFiles}`);
   console.log(`Categories: ${JSON.stringify(report.categoryCounts)}`);
   console.log(`Missing active metadata: ${report.missingMetadata.length}`);
+  console.log(`Missing active document IDs: ${report.missingDocumentIds.length}`);
   console.log(`Duplicate non-README titles: ${report.duplicateTitles.length}`);
+  console.log(
+    `Duplicate active authority claims: ${report.duplicateAuthorityClaims.length}`,
+  );
   console.log(`Review candidates: ${report.reviewCandidates.length}`);
   console.log(`Broken local links: ${report.brokenLinks.length}`);
   console.log(

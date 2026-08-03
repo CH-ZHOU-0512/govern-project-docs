@@ -20,6 +20,7 @@ import {
   countLines,
   encodeMarkdownPath,
   loadGovernanceConfig,
+  metadataStringArray,
   normalizePath,
   parseCliArguments,
   parseFrontMatter,
@@ -117,6 +118,7 @@ function parseDocument(absolutePath) {
   const content = readFileSync(absolutePath, "utf8");
   const lines = content.split(/\r?\n/);
   const metadata = parseFrontMatter(content) ?? {};
+  const authorityFor = metadataStringArray(metadata, "authority-for");
   const headings = [];
   const identifiers = [];
   const seenIdentifiers = new Set();
@@ -144,15 +146,19 @@ function parseDocument(absolutePath) {
   }
   return {
     access: accessFor(path),
+    authorityFor,
     category: categoryFor(absolutePath),
     charCount: content.length,
     headings,
     identifiers,
+    docId: metadata["doc-id"] ?? null,
     lastReviewed: metadata["last-reviewed"] ?? null,
     lineCount: countLines(content),
     owner: metadata.owner ?? null,
     path,
     status: metadata.status ?? null,
+    supersededBy: metadataStringArray(metadata, "superseded-by"),
+    supersedes: metadataStringArray(metadata, "supersedes"),
     title:
       headings.find((heading) => heading.level === 1)?.title ?? basename(path),
   };
@@ -163,7 +169,7 @@ function buildIndex() {
   const documents = collectMarkdownFiles(docsRoot)
     .filter((path) => !excluded.has(repositoryPath(path)))
     .map(parseDocument);
-  return { documents, schemaVersion: 1 };
+  return { documents, schemaVersion: 2 };
 }
 
 function markdownLink(path) {
@@ -204,10 +210,10 @@ function renderMarkdown(index) {
   const rows = index.documents
     .map(
       (document) =>
-        `| [${markdownTableText(document.path)}](${markdownLink(document.path)}) | ${markdownTableText(document.category)} | ${labels[document.access]} | ${markdownTableText(document.status ?? "—")} | ${markdownTableText(document.owner ?? "—")} | ${document.headings.length} | ${document.identifiers.length} |`,
+        `| [${markdownTableText(document.path)}](${markdownLink(document.path)}) | ${markdownTableText(document.docId ?? "—")} | ${markdownTableText(document.authorityFor.join(", ") || "—")} | ${markdownTableText(document.category)} | ${labels[document.access]} | ${markdownTableText(document.status ?? "—")} | ${markdownTableText(document.owner ?? "—")} | ${document.headings.length} | ${document.identifiers.length} |`,
     )
     .join("\n");
-  return `${generatedHeader}\n\n# Document index\n\nThis file contains navigation metadata, not document bodies. Query first, then read matched sections.\n\n\`\`\`powershell\nnode scripts/document-index.mjs query task-orders\nnode scripts/document-index.mjs query ADR-001\nnode scripts/document-index.mjs watch\n\`\`\`\n\n## Access levels\n\n${counts}\n\n- Routing documents help locate facts; they are not all mandatory for every task.\n- On-demand documents expand with the actual change surface.\n- Source, historical, and derived material must not be loaded wholesale by default.\n- Full headings, line numbers, and stable IDs are in [the machine index](document-index.json).\n\n## Documents\n\n| Document | Category | Access | Status | Owner | Headings | Stable IDs |\n| --- | --- | --- | --- | --- | ---: | ---: |\n${rows}\n`;
+  return `${generatedHeader}\n\n# Document index\n\nThis file contains navigation metadata, not document bodies. Query first, then read matched sections.\n\n\`\`\`powershell\nnode scripts/document-index.mjs query task-orders\nnode scripts/document-index.mjs query ADR-001\nnode scripts/document-index.mjs watch\n\`\`\`\n\n## Access levels\n\n${counts}\n\n- Routing documents help locate facts; they are not all mandatory for every task.\n- On-demand documents expand with the actual change surface.\n- Source, historical, and derived material must not be loaded wholesale by default.\n- Full headings, line numbers, stable IDs, authority claims, and supersession edges are in [the machine index](document-index.json).\n\n## Documents\n\n| Document | Doc ID | Authority for | Category | Access | Status | Owner | Headings | Stable IDs |\n| --- | --- | --- | --- | --- | --- | --- | ---: | ---: |\n${rows}\n`;
 }
 
 function renderOutputs(index) {
@@ -295,10 +301,14 @@ function queryIndex(query) {
       const metadataMatch = [
         document.access,
         document.category,
+        document.docId,
         document.owner,
         document.path,
         document.status,
         document.title,
+        ...document.authorityFor,
+        ...document.supersededBy,
+        ...document.supersedes,
       ].some((value) => value?.toLowerCase().includes(needle));
       if (
         !metadataMatch &&
@@ -310,6 +320,8 @@ function queryIndex(query) {
       }
       return {
         access: document.access,
+        authorityFor: document.authorityFor,
+        docId: document.docId,
         headingMatches,
         identifierMatches,
         path: document.path,

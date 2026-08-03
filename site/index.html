@@ -222,8 +222,8 @@
             <h2>不安装依赖，<br>先跑一次只读审计。</h2>
             <p>推荐 Node.js 22 或 24。工具不会修改目标仓库，适合先发现问题、评估范围，再决定如何治理。</p>
             <ul>
-              <li><span>01</span> Windows + Linux</li>
-              <li><span>02</span> Node.js 22 + 24</li>
+              <li><span>01</span> Authority Engine / schema v2</li>
+              <li><span>02</span> Windows + Linux / Node 22 + 24</li>
               <li><span>03</span> No runtime dependencies</li>
             </ul>
           </div>
@@ -236,10 +236,10 @@
 <span class="prompt">$</span> node scripts/audit-docs.mjs --repo .
 
 <span class="output">Documentation audit</span>
-  Missing metadata      <b>0</b>
-  Broken local links   <b>0</b>
-  Review candidates    <b>0</b>
-  Status               <strong>ready</strong></code></pre>
+  Missing document IDs  <b>0</b>
+  Authority conflicts   <b>0</b>
+  Broken local links    <b>0</b>
+  Status                <strong>ready</strong></code></pre>
           </div>
         </div>
       </section>

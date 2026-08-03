@@ -31,6 +31,35 @@ Documents may explain an authority but must not duplicate volatile fields, statu
 7. Generate indexes after paths stabilize.
 8. Validate and only then remove empty legacy directories.
 
+## Adopt authority schema v2
+
+Schema v2 turns authority from a convention into a CI-enforced contract. Add a stable `doc-id` to every active document and declare only the changing facts for which the document is canonical:
+
+```yaml
+---
+doc-id: DOC-PAYMENTS-ARCHITECTURE
+status: active
+owner: payments-team
+last-reviewed: 2026-08-03
+authority-for:
+  - payments.architecture
+  - payments.retry-policy
+---
+```
+
+Choose narrow, stable authority keys. Prefer `domain.fact` names such as `payments.retry-policy`; do not use headings or file paths as keys. Routing pages normally have a `doc-id` but no `authority-for` claim.
+
+Migrate in this order:
+
+1. Upgrade the configuration to `schemaVersion: 2` and add `authorityStatuses` plus `authorityKeyPattern`.
+2. Add unique `doc-id` values without changing document status or ownership.
+3. Add authority claims to already accepted or active canonical documents.
+4. Resolve duplicate claims explicitly; do not let automation choose a winner.
+5. For each replacement, add `supersedes` to the new document and reciprocal `superseded-by` to the old one.
+6. Move the old document to `archive` only after links and references are updated.
+
+Runtime tools continue to accept schema v1 configurations. Under v1, `doc-id` is not required, but any authority or supersession metadata that is present is still validated.
+
 ## Safety rules
 
 - Preserve unrelated user edits and dirty-worktree content.

@@ -11,6 +11,8 @@
     "excludedFromMetadata",
     "requiredMetadata",
     "allowedStatuses",
+    "authorityStatuses",
+    "authorityKeyPattern",
     "lineLimits",
     "routingPaths",
     "routingPatterns",
@@ -18,13 +20,19 @@
   ],
   "properties": {
     "$schema": { "type": "string" },
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "docsRoot": { "$ref": "#/$defs/repositoryPath" },
     "generatedRoot": { "$ref": "#/$defs/repositoryPath" },
     "activeDirectories": { "$ref": "#/$defs/uniqueStrings" },
     "excludedFromMetadata": { "$ref": "#/$defs/uniqueStrings" },
     "requiredMetadata": { "$ref": "#/$defs/nonEmptyUniqueStrings" },
     "allowedStatuses": { "$ref": "#/$defs/nonEmptyUniqueStrings" },
+    "authorityStatuses": { "$ref": "#/$defs/nonEmptyUniqueStrings" },
+    "authorityKeyPattern": {
+      "type": "string",
+      "minLength": 1,
+      "format": "regex"
+    },
     "lineLimits": {
       "type": "object",
       "required": ["default"],

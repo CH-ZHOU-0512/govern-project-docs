@@ -38,7 +38,7 @@ Repository documentation usually becomes difficult to trust for the same reasons
 
 - [SKILL.md](SKILL.md) — the Codex workflow for auditing and reorganizing repository documentation.
 - [scripts/audit-docs.mjs](scripts/audit-docs.mjs) — a read-only audit that finds documentation structure, duplication signals, missing metadata, broken local links, and stale path references.
-- [assets/runtime](assets/runtime) — zero-dependency CLIs for document indexing, bounded search, governance checks, and Markdown link validation.
+- [assets/runtime](assets/runtime) — zero-dependency CLIs for authority enforcement, document indexing, bounded search, governance checks, and Markdown link validation.
 - [assets/templates](assets/templates) — adaptable governance policies, AI change records, configuration, and JSON Schema starters.
 - [references](references) — focused guidance for migrations, authority design, automation, CI, hooks, and stack-specific code graphs.
 
@@ -76,6 +76,38 @@ node scripts/audit-docs.mjs --repo /path/to/target-repository --json
 ```
 
 The audit is intentionally read-only. It reports findings without reorganizing the target repository.
+
+## Authority Engine
+
+Schema v2 makes “one active authority” machine-checkable. Each governed document receives a stable ID and may claim narrow authority keys:
+
+```yaml
+---
+doc-id: DOC-PAYMENTS-ARCHITECTURE
+status: active
+owner: payments-team
+last-reviewed: 2026-08-03
+authority-for:
+  - payments.architecture
+  - payments.retry-policy
+---
+```
+
+The governance check rejects duplicate document IDs, multiple accepted or active documents claiming the same authority key, invalid authority keys, archived authority claims, unknown supersession targets, non-reciprocal replacements, and supersession cycles. Schema v1 configurations remain supported for incremental adoption.
+
+When replacing a document, declare both sides of the relationship:
+
+```yaml
+# New authority
+doc-id: DOC-PAYMENTS-V2
+status: active
+supersedes: [DOC-PAYMENTS-V1]
+
+# Previous authority
+doc-id: DOC-PAYMENTS-V1
+status: superseded
+superseded-by: DOC-PAYMENTS-V2
+```
 
 ## Install the automation in another repository
 

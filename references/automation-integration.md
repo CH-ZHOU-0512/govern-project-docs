@@ -17,6 +17,8 @@ Copy and adapt these files into the target repository with `apply_patch`:
 
 Copy the four runtime files as a unit because the three CLIs import `docs-toolkit.mjs`. The link checker validates local files plus GitHub-style heading anchors and explicit HTML `id` or `name` anchors; adapt it if the target renderer uses different slug rules. Copy templates only when the repository lacks an equivalent authority. Replace placeholders and preserve existing decisions.
 
+The current template uses authority schema v2. Before enabling CI, assign every governed document a unique `doc-id`, choose the accepted and active statuses that may hold authority in `authorityStatuses`, and adapt `authorityKeyPattern` to the repository's naming convention. Add `authority-for` only after humans resolve which document is canonical. Existing schema v1 configurations remain accepted and can migrate incrementally.
+
 ## Package commands
 
 For Node package scripts, prefer these names:
@@ -43,7 +45,7 @@ CI order:
 
 1. Generate or check any stack-specific code graph.
 2. Check the document index.
-3. Check governance metadata and archive boundaries.
+3. Check document IDs, unique authority claims, supersession edges, lifecycle metadata, and archive boundaries.
 4. Check links and formatting.
 5. Run normal project validation.
 

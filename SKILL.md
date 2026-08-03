@@ -53,7 +53,7 @@ docs/
 └─ archive/       # completed or superseded records
 ```
 
-Define one authority per changing fact. Authority does not mean every task must read the whole document.
+Define one authority per changing fact. Authority does not mean every task must read the whole document. When schema v2 automation is installed, give every governed document a stable `doc-id` and express canonical facts as narrow `authority-for` keys. Resolve duplicate claims with the user; never choose a winner from filenames or timestamps alone.
 
 Use three retrieval levels:
 
@@ -78,8 +78,8 @@ For a repository-wide governance setup, read [automation-integration.md](referen
 Reusable assets:
 
 - `assets/runtime/docs-toolkit.mjs`: shared deterministic path, CLI, metadata, link, configuration, and atomic-write utilities required by the runtime CLIs.
-- `assets/runtime/document-index.mjs`: deterministic Markdown and JSON index with heading, ID, query, check, and watch modes.
-- `assets/runtime/check-doc-governance.mjs`: metadata, lifecycle, archive-boundary, and generated-banner checks driven by config.
+- `assets/runtime/document-index.mjs`: deterministic Markdown and JSON index with document IDs, authority claims, supersession edges, heading and stable-ID search, check, and watch modes.
+- `assets/runtime/check-doc-governance.mjs`: document-ID, unique-authority, reciprocal-supersession, lifecycle, archive-boundary, and generated-banner checks driven by config.
 - `assets/runtime/check-markdown-links.mjs`: local Markdown target validation.
 - `assets/templates/`: governance policy, AI policy, change archive, configuration, and JSON Schema starters.
 
