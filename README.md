@@ -1,6 +1,7 @@
 # govern-project-docs
 
 [![Validate](https://github.com/CH-ZHOU-0512/govern-project-docs/actions/workflows/validate.yml/badge.svg)](https://github.com/CH-ZHOU-0512/govern-project-docs/actions/workflows/validate.yml)
+[![Project site](https://img.shields.io/badge/GitHub%20Pages-Project%20site-6ee7d8?logo=github)](https://ch-zhou-0512.github.io/govern-project-docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Codex Skill and zero-dependency Node.js toolkit for keeping repository documentation authoritative, searchable, and economical for humans and AI agents to read.

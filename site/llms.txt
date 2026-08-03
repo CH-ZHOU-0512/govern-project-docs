@@ -1,0 +1,28 @@
+# govern-project-docs
+
+> An open-source Codex Skill and zero-dependency Node.js toolkit for keeping repository documentation authoritative, searchable, and economical for humans and AI agents to read.
+
+## Primary links
+
+- Project site: https://ch-zhou-0512.github.io/govern-project-docs/
+- Source repository: https://github.com/CH-ZHOU-0512/govern-project-docs
+- Documentation: https://github.com/CH-ZHOU-0512/govern-project-docs/wiki
+- Getting started: https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Getting-Started
+- Discussions: https://github.com/CH-ZHOU-0512/govern-project-docs/discussions
+
+## Project facts
+
+- Author: CH-ZHOU-0512
+- License: MIT
+- Runtime: Node.js 22 or 24
+- Runtime dependencies: none
+- Supported CI platforms: Ubuntu and Windows
+- Core workflow: audit, govern, enforce
+
+## Capabilities
+
+- Read-only documentation audits
+- Deterministic document index generation and bounded querying
+- Documentation governance policy checks
+- Local Markdown link validation
+- Cross-platform file watching for local feedback
