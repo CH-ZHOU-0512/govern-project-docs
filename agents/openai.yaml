@@ -1,0 +1,4 @@
+interface:
+  display_name: "项目文档治理"
+  short_description: "分类、归档并自动索引大型项目文档，适用于 AI 高频迭代"
+  default_prompt: "使用 $govern-project-docs 审计并整理当前项目文档，建立渐进读取、自动目录和验证门禁。"

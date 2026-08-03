@@ -1,0 +1,38 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - name: Check syntax
+        run: |
+          node --check scripts/audit-docs.mjs
+          node --check assets/runtime/docs-toolkit.mjs
+          node --check assets/runtime/document-index.mjs
+          node --check assets/runtime/check-doc-governance.mjs
+          node --check assets/runtime/check-markdown-links.mjs
+      - name: Run tests
+        run: node --test tests/*.test.mjs
+      - name: Audit skill documentation
+        run: node scripts/audit-docs.mjs --repo .
+      - name: Check local links
+        run: node assets/runtime/check-markdown-links.mjs --repo .

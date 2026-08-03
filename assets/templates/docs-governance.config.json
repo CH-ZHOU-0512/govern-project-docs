@@ -1,0 +1,25 @@
+{
+  "$schema": "./docs-governance.schema.json",
+  "schemaVersion": 1,
+  "docsRoot": "docs",
+  "generatedRoot": "docs/generated",
+  "activeDirectories": [
+    "architecture",
+    "delivery",
+    "domains",
+    "governance",
+    "operations",
+    "product"
+  ],
+  "excludedFromMetadata": ["archive", "generated", "reference", "source"],
+  "requiredMetadata": ["status", "owner", "last-reviewed"],
+  "allowedStatuses": ["draft", "accepted", "active", "superseded", "archived"],
+  "lineLimits": {
+    "default": 500,
+    "README.md": 300,
+    "delivery/STATUS.md": 150
+  },
+  "routingPaths": ["docs/README.md", "docs/delivery/STATUS.md"],
+  "routingPatterns": ["^docs/domains/(?:[^/]+/)?README\\.md$"],
+  "stableIdPrefixes": ["ADR", "OQ", "CON", "AC", "TASK", "DOC"]
+}
