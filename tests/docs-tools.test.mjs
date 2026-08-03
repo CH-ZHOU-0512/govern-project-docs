@@ -171,10 +171,15 @@ test("document index is deterministic, queryable, encoded, and freshness checked
 test("document index watch mode refreshes outputs", async (t) => {
   const root = createRepository(t);
   write(root, "docs/README.md", activeDocument("Home", "ADR-001 Initial."));
+  let stdout = "";
   let stderr = "";
   const watcher = spawn(process.execPath, [indexScript, "watch", "--repo", root], {
     cwd: repositoryRoot,
-    stdio: ["ignore", "ignore", "pipe"],
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  watcher.stdout.setEncoding("utf8");
+  watcher.stdout.on("data", (chunk) => {
+    stdout += chunk;
   });
   watcher.stderr.setEncoding("utf8");
   watcher.stderr.on("data", (chunk) => {
@@ -184,7 +189,12 @@ test("document index watch mode refreshes outputs", async (t) => {
     if (watcher.exitCode === null) watcher.kill();
   });
   const jsonPath = join(root, "docs/generated/document-index.json");
-  await waitFor(() => existsSync(jsonPath), "initial watch output");
+  await waitFor(
+    () => stdout.includes("Watching Markdown documents."),
+    `watcher readiness${stderr ? ` (${stderr.trim()})` : ""}`,
+    10_000,
+  );
+  assert.equal(existsSync(jsonPath), true);
 
   write(root, "docs/README.md", activeDocument("Home", "ADR-002 Refreshed."));
   await waitFor(() => {
@@ -194,7 +204,7 @@ test("document index watch mode refreshes outputs", async (t) => {
     } catch {
       return false;
     }
-  }, `watch refresh${stderr ? ` (${stderr.trim()})` : ""}`);
+  }, `watch refresh${stderr ? ` (${stderr.trim()})` : ""}`, 10_000);
   watcher.kill();
 });
 
