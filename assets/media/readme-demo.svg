@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">govern-project-docs workflow</title>
+  <desc id="desc">Audit document chaos, establish a single authority, then enforce deterministic indexes and CI checks.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="0.55" stop-color="#0b1730"/>
+      <stop offset="1" stop-color="#071922"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60d9ff"/>
+      <stop offset="1" stop-color="#3979ff"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b293ff"/>
+      <stop offset="1" stop-color="#6f63ff"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#62efbd"/>
+      <stop offset="1" stop-color="#14b87a"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#8cb4e8" stroke-opacity="0.055"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#020712" flood-opacity="0.55"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" rx="32" fill="url(#background)"/>
+  <rect width="1600" height="900" rx="32" fill="url(#grid)"/>
+  <circle cx="1380" cy="110" r="270" fill="#24d39a" opacity="0.035"/>
+  <circle cx="180" cy="760" r="300" fill="#3979ff" opacity="0.045"/>
+
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="92" y="104" fill="#f7fbff" font-size="54" font-weight="760" letter-spacing="-1.5">From document chaos to governed knowledge</text>
+    <text x="94" y="151" fill="#9db0c9" font-size="25">审计 → 建立权威 → 自动索引与 CI 守门</text>
+    <rect x="1320" y="78" width="188" height="48" rx="24" fill="#0c2636" stroke="#3e7793"/>
+    <circle cx="1351" cy="102" r="7" fill="#5ce3b4" filter="url(#glow)"/>
+    <text x="1372" y="110" fill="#cdeafa" font-size="19" font-weight="650">zero dependencies</text>
+
+    <!-- Stage 1 -->
+    <g filter="url(#shadow)">
+      <rect x="88" y="218" width="416" height="426" rx="28" fill="#0c1729" stroke="#233a5c" stroke-width="2"/>
+    </g>
+    <rect x="119" y="250" width="114" height="34" rx="17" fill="#172c49"/>
+    <text x="139" y="273" fill="#73d4ff" font-size="16" font-weight="750" letter-spacing="1.8">01 · AUDIT</text>
+    <text x="119" y="332" fill="#f4f8ff" font-size="34" font-weight="730">先看清问题</text>
+    <text x="119" y="370" fill="#98abc4" font-size="20">只读扫描，不碰目标仓库</text>
+
+    <g transform="translate(122 410)">
+      <g transform="rotate(-7 62 70)">
+        <rect x="0" y="9" width="124" height="142" rx="13" fill="#16253d" stroke="#365476"/>
+        <path d="M83 9h24l17 19v12H83z" fill="#233a58"/>
+        <rect x="20" y="58" width="76" height="8" rx="4" fill="#607794"/>
+        <rect x="20" y="78" width="60" height="8" rx="4" fill="#607794" opacity=".75"/>
+        <rect x="20" y="98" width="70" height="8" rx="4" fill="#607794" opacity=".52"/>
+      </g>
+      <g transform="translate(98 18) rotate(7 62 70)">
+        <rect x="0" y="9" width="124" height="142" rx="13" fill="#201d43" stroke="#665c9f"/>
+        <path d="M83 9h24l17 19v12H83z" fill="#363063"/>
+        <rect x="20" y="58" width="76" height="8" rx="4" fill="#8c82bd"/>
+        <rect x="20" y="78" width="60" height="8" rx="4" fill="#8c82bd" opacity=".75"/>
+        <rect x="20" y="98" width="70" height="8" rx="4" fill="#8c82bd" opacity=".52"/>
+      </g>
+      <circle cx="255" cy="36" r="28" fill="#3a1d32" stroke="#d96691"/>
+      <path d="M245 26l20 20m0-20l-20 20" stroke="#ff86ab" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <g fill="#bac9dc" font-size="18">
+      <text x="120" y="596">重复标题</text>
+      <text x="242" y="596">失效链接</text>
+      <text x="364" y="596">陈旧状态</text>
+    </g>
+
+    <!-- Arrow 1 -->
+    <path d="M530 430h70" stroke="url(#blue)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M585 416l18 14-18 14" fill="none" stroke="#52c7ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 2 -->
+    <g filter="url(#shadow)">
+      <rect x="622" y="218" width="416" height="426" rx="28" fill="#0d172b" stroke="#384174" stroke-width="2"/>
+    </g>
+    <rect x="653" y="250" width="133" height="34" rx="17" fill="#27234d"/>
+    <text x="673" y="273" fill="#b9a7ff" font-size="16" font-weight="750" letter-spacing="1.8">02 · GOVERN</text>
+    <text x="653" y="332" fill="#f4f8ff" font-size="34" font-weight="730">只留一个权威</text>
+    <text x="653" y="370" fill="#98abc4" font-size="20">入口路由，细节按需，证据归档</text>
+
+    <g transform="translate(660 411)">
+      <rect x="82" y="0" width="164" height="154" rx="20" fill="#171e3d" stroke="url(#violet)" stroke-width="3"/>
+      <path d="M190 0h33l23 25v20h-56z" fill="#2e2d65"/>
+      <rect x="108" y="48" width="110" height="10" rx="5" fill="#b2a5ff"/>
+      <rect x="108" y="74" width="86" height="8" rx="4" fill="#746da8"/>
+      <rect x="108" y="95" width="99" height="8" rx="4" fill="#746da8" opacity=".7"/>
+      <rect x="108" y="116" width="63" height="8" rx="4" fill="#746da8" opacity=".48"/>
+      <circle cx="164" cy="77" r="92" fill="none" stroke="#7767ff" stroke-opacity=".13" stroke-width="16"/>
+      <path d="M0 77h66m180 0h66" stroke="#736aff" stroke-width="3" stroke-dasharray="8 8"/>
+      <circle cx="0" cy="77" r="9" fill="#5ecfff"/>
+      <circle cx="312" cy="77" r="9" fill="#5ce3b4"/>
+    </g>
+    <g font-size="17" font-weight="650">
+      <rect x="658" y="583" width="104" height="31" rx="15" fill="#102b3c"/>
+      <text x="678" y="604" fill="#75d5ff">routing</text>
+      <rect x="776" y="583" width="119" height="31" rx="15" fill="#252347"/>
+      <text x="793" y="604" fill="#b8a8ff">on-demand</text>
+      <rect x="909" y="583" width="96" height="31" rx="15" fill="#14322d"/>
+      <text x="928" y="604" fill="#68dfb6">archive</text>
+    </g>
+
+    <!-- Arrow 2 -->
+    <path d="M1064 430h70" stroke="url(#green)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M1119 416l18 14-18 14" fill="none" stroke="#55e3b1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 3 -->
+    <g filter="url(#shadow)">
+      <rect x="1156" y="218" width="356" height="426" rx="28" fill="#0b1926" stroke="#255943" stroke-width="2"/>
+    </g>
+    <rect x="1187" y="250" width="137" height="34" rx="17" fill="#13352d"/>
+    <text x="1207" y="273" fill="#71e5bb" font-size="16" font-weight="750" letter-spacing="1.8">03 · ENFORCE</text>
+    <text x="1187" y="332" fill="#f4f8ff" font-size="34" font-weight="730">让规则自动执行</text>
+    <text x="1187" y="370" fill="#98abc4" font-size="20">确定性索引 + 查询 + CI</text>
+
+    <g transform="translate(1190 407)">
+      <rect width="286" height="144" rx="17" fill="#071019" stroke="#284457"/>
+      <circle cx="24" cy="23" r="5" fill="#ff6b7e"/>
+      <circle cx="42" cy="23" r="5" fill="#f5be4f"/>
+      <circle cx="60" cy="23" r="5" fill="#5bdd9a"/>
+      <g font-family="Consolas, 'SFMono-Regular', monospace" font-size="17">
+        <text x="22" y="65" fill="#6fd1ff">$ generate</text>
+        <text x="22" y="94" fill="#b9a8ff">$ query ADR-042</text>
+        <text x="22" y="123" fill="#61e2b0">✓ CI current</text>
+      </g>
+      <circle cx="249" cy="87" r="31" fill="#123b31" stroke="#51dda9" stroke-width="3"/>
+      <path d="M234 87l10 10 20-23" fill="none" stroke="#68efba" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="1188" y="594" fill="#b7c8d9" font-size="18">Node 22 / 24 · Windows / Linux</text>
+
+    <!-- Terminal strip -->
+    <g filter="url(#shadow)">
+      <rect x="88" y="700" width="1424" height="122" rx="24" fill="#07101b" stroke="#223c53" stroke-width="2"/>
+    </g>
+    <circle cx="122" cy="732" r="6" fill="#ff6f7f"/>
+    <circle cx="143" cy="732" r="6" fill="#f4bd50"/>
+    <circle cx="164" cy="732" r="6" fill="#5cdda0"/>
+    <g font-family="Consolas, 'SFMono-Regular', monospace" font-size="20">
+      <text x="116" y="782" fill="#9fb3c9">$ node scripts/audit-docs.mjs --repo .</text>
+      <text x="606" y="782" fill="#7bd7ff">$ node scripts/document-index.mjs query ADR-042</text>
+      <text x="1234" y="782" fill="#6de6b4">8/8 tests ✓</text>
+    </g>
+    <text x="88" y="860" fill="#6f849e" font-size="17">govern-project-docs · Codex Skill + zero-dependency Node.js toolkit</text>
+  </g>
+</svg>

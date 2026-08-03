@@ -7,6 +7,8 @@ A Codex Skill and zero-dependency Node.js toolkit for keeping repository documen
 
 这是一个面向大型项目和 AI 高频迭代仓库的文档治理工具包：审计重复或冲突的知识，建立清晰的权威来源与归档边界，并用确定性索引和 CI 检查防止文档体系再次失控。
 
+![govern-project-docs workflow](assets/media/readme-demo.svg)
+
 ## Why this project
 
 Repository documentation usually becomes difficult to trust for the same reasons:
@@ -137,6 +139,8 @@ The [project Wiki](https://github.com/CH-ZHOU-0512/govern-project-docs/wiki) con
 - governance model, taxonomy, authority, and lifecycle;
 - runtime CLI and configuration reference;
 - development, validation, CI, and contribution guidance.
+
+For a concise Chinese introduction, see the [LINUX DO / V2EX launch post](community/launch-post.md).
 
 ## Contributing
 
