@@ -8,23 +8,24 @@
     <meta name="keywords" content="documentation governance, Codex Skill, AI agent, 文档治理, Node.js, knowledge management, docs as code">
     <meta name="author" content="CH-ZHOU-0512">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="theme-color" content="#07111f">
+    <meta name="theme-color" content="#f2f0e8">
     <link rel="canonical" href="https://ch-zhou-0512.github.io/govern-project-docs/">
+
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:site_name" content="govern-project-docs">
     <meta property="og:title" content="govern-project-docs — 让项目文档成为可信的工程资产">
     <meta property="og:description" content="Codex Skill + 零依赖 Node.js 工具包：审计、治理、持续约束你的项目文档。">
     <meta property="og:url" content="https://ch-zhou-0512.github.io/govern-project-docs/">
-    <meta property="og:image" content="https://ch-zhou-0512.github.io/govern-project-docs/assets/share-cover.png">
-    <meta property="og:image:width" content="1731">
-    <meta property="og:image:height" content="909">
+    <meta property="og:image" content="https://ch-zhou-0512.github.io/govern-project-docs/assets/share-cover-v2.png">
+    <meta property="og:image:width" content="1536">
+    <meta property="og:image:height" content="1024">
     <meta property="og:image:alt" content="govern-project-docs 项目分享封面">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="govern-project-docs">
     <meta name="twitter:description" content="让项目文档成为可检索、可验证的工程资产。">
-    <meta name="twitter:image" content="https://ch-zhou-0512.github.io/govern-project-docs/assets/share-cover.png">
+    <meta name="twitter:image" content="https://ch-zhou-0512.github.io/govern-project-docs/assets/share-cover-v2.png">
 
     <script>document.documentElement.classList.add("js")</script>
     <link rel="stylesheet" href="./styles.css">
@@ -63,215 +64,210 @@
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
-    <div class="page-ambient" aria-hidden="true">
-      <i class="ambient-orb ambient-orb-one"></i>
-      <i class="ambient-orb ambient-orb-two"></i>
-      <i class="ambient-grid"></i>
-    </div>
 
     <header class="site-header">
-      <nav class="nav shell" aria-label="主导航">
+      <div class="shell nav-wrap">
         <a class="brand" href="#top" aria-label="govern-project-docs 首页">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span>govern-project-docs</span>
+          <span class="brand-badge">GPD</span>
+          <span class="brand-copy"><strong>govern-project-docs</strong><small>Documentation governance</small></span>
         </a>
-        <div class="nav-links">
+        <nav class="nav-links" aria-label="主导航">
+          <a href="#why">为什么</a>
           <a href="#workflow">工作流</a>
           <a href="#toolkit">工具</a>
-          <a href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki">Wiki</a>
-          <a class="nav-github" href="https://github.com/CH-ZHOU-0512/govern-project-docs" aria-label="在 GitHub 上查看 govern-project-docs">GitHub <span aria-hidden="true">↗</span></a>
-        </div>
-      </nav>
+          <a href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki">文档</a>
+        </nav>
+        <a class="github-link" href="https://github.com/CH-ZHOU-0512/govern-project-docs">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
     </header>
 
     <main id="main">
       <section class="hero shell" id="top">
-        <div class="hero-copy">
-          <p class="eyebrow"><span></span> Codex Skill · Zero-dependency Node.js</p>
-          <h1>让项目文档成为<br><em>可信的工程资产</em></h1>
-          <p class="hero-lede">审计重复与冲突，建立唯一权威来源，再用确定性索引与 CI 把秩序保持下去。为人类维护者设计，也为 AI Agent 的有限上下文而设计。</p>
-          <p class="hero-en">Keep repository knowledge authoritative, searchable, and economical to read.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="https://github.com/CH-ZHOU-0512/govern-project-docs">查看 GitHub <span aria-hidden="true">↗</span></a>
-            <a class="button button-secondary" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Getting-Started">快速上手</a>
-          </div>
-          <ul class="hero-facts" aria-label="项目特点">
-            <li><strong data-count="0">0</strong><span>运行时依赖</span></li>
-            <li><strong data-count="12">12</strong><span>自动化测试</span></li>
-            <li><strong>MIT</strong><span>开源许可</span></li>
-          </ul>
+        <div class="hero-kicker" data-reveal>
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>OPEN SOURCE / MIT</span>
+          <span>CODEX SKILL + NODE.JS</span>
         </div>
 
-        <div class="hero-stage">
-          <div class="hero-visual spotlight-card" data-tilt aria-label="文档治理流程预览">
-            <div class="window-bar">
-              <span></span><span></span><span></span>
-              <code>docs-governance / overview</code>
+        <div class="hero-heading">
+          <h1 data-reveal>文档不该<br><em>互相打架。</em></h1>
+          <div class="hero-aside" data-reveal>
+            <p>为人类维护者和 AI Agent 建立同一套可信知识边界。</p>
+            <p class="hero-aside-en">One active authority.<br>Less context, more certainty.</p>
+          </div>
+        </div>
+
+        <div class="hero-actions" data-reveal>
+          <a class="button button-dark" href="https://github.com/CH-ZHOU-0512/govern-project-docs">查看源代码 <span aria-hidden="true">↗</span></a>
+          <a class="button button-text" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Getting-Started">开始使用 <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="hero-console" data-reveal aria-label="文档治理系统示意">
+          <div class="console-bar">
+            <span>govern-project-docs / audit</span>
+            <span class="console-status"><i></i> SYSTEM HEALTHY</span>
+          </div>
+          <div class="console-body">
+            <div class="console-report">
+              <p class="mono-label">READ-ONLY AUDIT</p>
+              <h2>把知识边界<br>变成机器可检查的规则。</h2>
+              <dl class="console-stats">
+                <div><dt data-count="0">0</dt><dd>runtime dependencies</dd></div>
+                <div><dt data-count="12">12</dt><dd>automated tests</dd></div>
+                <div><dt>2×2</dt><dd>OS / Node matrix</dd></div>
+              </dl>
             </div>
-            <img src="./assets/share-cover.png" width="1731" height="909" alt="govern-project-docs：从文档混乱到可治理知识的流程概览">
-            <div class="status-pill"><span></span> CI checks passing</div>
+            <div class="authority-map" aria-hidden="true">
+              <div class="map-title"><span>AUTHORITY MAP</span><code>live</code></div>
+              <div class="map-tree">
+                <div class="tree-root"><i></i><span>repository knowledge</span><b>authority</b></div>
+                <div class="tree-branch">
+                  <div><i></i><span>README.md</span><b>routing</b></div>
+                  <div><i></i><span>machine contracts</span><b>source</b></div>
+                  <div><i></i><span>docs / current</span><b>active</b></div>
+                  <div><i></i><span>archive / evidence</span><b>history</b></div>
+                </div>
+              </div>
+              <div class="map-log"><span>$</span> index freshness check <b>passed</b></div>
+            </div>
           </div>
-          <div class="float-card float-card-top" aria-hidden="true"><b>authority</b><span>single source of truth</span></div>
-          <div class="float-card float-card-bottom" aria-hidden="true"><i></i><span>index freshness</span><strong>100%</strong></div>
         </div>
-        <a class="scroll-cue" href="#why" aria-label="继续了解项目"><span></span> Scroll to inspect</a>
+
+        <p class="hero-footnote" data-reveal><span>01</span> Start with a report. Change nothing until the authority is clear.</p>
       </section>
 
-      <section class="signal-strip" aria-label="核心原则">
-        <div class="signal-track">
-          <div class="signal-group">
-            <p><span>01</span> One active authority</p>
-            <p><span>02</span> Progressive retrieval</p>
-            <p><span>03</span> Deterministic indexes</p>
-            <p><span>04</span> CI-enforced freshness</p>
-          </div>
-          <div class="signal-group" aria-hidden="true">
-            <p><span>01</span> One active authority</p>
-            <p><span>02</span> Progressive retrieval</p>
-            <p><span>03</span> Deterministic indexes</p>
-            <p><span>04</span> CI-enforced freshness</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="problem shell section" id="why">
-        <div class="problem-layout">
-        <div class="section-heading" data-reveal>
-          <p class="kicker">WHY IT EXISTS</p>
-          <h2>文档多，不等于知识清楚</h2>
-          <p>问题通常不是“缺文档”，而是同一个事实散落在 README、状态页、计划和交接记录中。它们开始互相冲突，人和 Agent 都不知道该信谁。</p>
-          <div class="section-note"><span></span> 文档债务通常从“复制一份方便修改”开始</div>
-        </div>
-        <div class="problem-grid">
-          <article class="spotlight-card" data-reveal>
-            <span class="card-index">A</span>
-            <div><h3>重复事实</h3>
-            <p>同一状态维护在多个活跃文档里，修改一次就留下数个过期副本。</p></div>
-            <span class="card-signal" aria-hidden="true">01 → 04</span>
-          </article>
-          <article class="spotlight-card" data-reveal>
-            <span class="card-index">B</span>
-            <h3>权威不明</h3>
-            <p>API、Schema 与依赖信息从机器契约复制到 Markdown，随后悄悄漂移。</p>
-          </article>
-          <article class="spotlight-card" data-reveal>
-            <span class="card-index">C</span>
-            <h3>上下文浪费</h3>
-            <p>AI Agent 必须读取大量历史噪声，才能找到完成当前任务所需的少量事实。</p>
-          </article>
-        </div>
+      <section class="principles" aria-label="核心原则">
+        <div class="shell principles-grid">
+          <p><span>01</span> 唯一活跃权威</p>
+          <p><span>02</span> 渐进式检索</p>
+          <p><span>03</span> 确定性索引</p>
+          <p><span>04</span> CI 持续约束</p>
         </div>
       </section>
 
-      <section class="workflow section" id="workflow">
+      <section class="section shell" id="why">
+        <header class="section-head" data-reveal>
+          <p><span>01</span> WHY IT EXISTS</p>
+          <h2>真正昂贵的不是缺文档，<br>而是不知道该信哪一份。</h2>
+        </header>
+        <div class="pain-grid">
+          <article data-reveal>
+            <p class="pain-number">A / 01</p>
+            <h3>同一事实，多处维护</h3>
+            <p>状态散落在 README、计划、交接记录和状态页。一次修改，留下多个过期版本。</p>
+            <span>duplicate truth</span>
+          </article>
+          <article data-reveal>
+            <p class="pain-number">B / 02</p>
+            <h3>机器契约，被手工转述</h3>
+            <p>API、Schema 与依赖信息复制到 Markdown 之后，开始和真正的系统悄悄漂移。</p>
+            <span>authority drift</span>
+          </article>
+          <article data-reveal>
+            <p class="pain-number">C / 03</p>
+            <h3>上下文很多，答案很少</h3>
+            <p>AI Agent 读取大量历史噪声，才能找到完成当前任务真正需要的少量事实。</p>
+            <span>context waste</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="workflow" id="workflow">
         <div class="shell">
-          <div class="section-heading split-heading" data-reveal>
-            <div>
-              <p class="kicker">THE WORKFLOW</p>
-              <h2>先审计，再治理，最后持续约束</h2>
-            </div>
-            <p>从只读报告开始，不贸然移动或删除。每一步都保留可验证的边界。</p>
-          </div>
-
-          <ol class="workflow-list" data-reveal>
-            <li class="workflow-step">
-              <div class="step-number">01</div>
-              <div>
-                <p class="step-label">AUDIT</p>
-                <h3>看清文档系统</h3>
-                <p>发现重复标题、失效链接、缺失元数据、陈旧路径和放错位置的历史材料。</p>
-              </div>
-              <code>node scripts/audit-docs.mjs --repo .</code>
+          <header class="section-head section-head-inverse" data-reveal>
+            <p><span>02</span> THE WORKFLOW</p>
+            <h2>三步，把文档从内容堆积<br>变成工程系统。</h2>
+          </header>
+          <ol class="workflow-grid">
+            <li data-reveal>
+              <div class="workflow-top"><span>01</span><code>AUDIT</code></div>
+              <h3>先看清</h3>
+              <p>只读扫描重复标题、失效链接、缺失元数据、陈旧路径和归档候选。</p>
+              <code class="workflow-command">audit-docs.mjs --repo .</code>
             </li>
-            <li class="workflow-step">
-              <div class="step-number">02</div>
-              <div>
-                <p class="step-label">GOVERN</p>
-                <h3>定义权威与生命周期</h3>
-                <p>把当前事实、来源证据、参考材料、生成内容和归档记录放到各自应在的位置。</p>
-              </div>
-              <code>authority → routing → evidence</code>
+            <li data-reveal>
+              <div class="workflow-top"><span>02</span><code>GOVERN</code></div>
+              <h3>再定权威</h3>
+              <p>定义当前事实、来源证据、参考材料、生成内容与历史记录的边界。</p>
+              <code class="workflow-command">authority → routing → evidence</code>
             </li>
-            <li class="workflow-step">
-              <div class="step-number">03</div>
-              <div>
-                <p class="step-label">ENFORCE</p>
-                <h3>让秩序成为自动化</h3>
-                <p>生成稳定索引，并在 CI 中检查链接、治理规则和索引新鲜度。</p>
-              </div>
-              <code>generate · check · query · watch</code>
+            <li data-reveal>
+              <div class="workflow-top"><span>03</span><code>ENFORCE</code></div>
+              <h3>持续守住</h3>
+              <p>生成稳定索引，让 CI 持续检查链接、治理规则和索引新鲜度。</p>
+              <code class="workflow-command">generate · check · query</code>
             </li>
           </ol>
         </div>
       </section>
 
-      <section class="demo shell section" aria-labelledby="demo-title">
-        <div class="demo-frame spotlight-card" data-reveal>
-          <div class="demo-copy">
-            <p class="kicker">FROM CHAOS TO GOVERNANCE</p>
-            <h2 id="demo-title">把隐性的维护习惯，变成显式、可检查的系统</h2>
-            <p>迁移旧知识、指定唯一权威、按需检索、归档证据，再由自动化检查阻止体系退化。</p>
-            <a class="text-link" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Governance-Model">阅读治理模型 <span aria-hidden="true">→</span></a>
-          </div>
-          <figure class="demo-media">
-            <img src="./assets/readme-demo.png" width="1600" height="900" loading="lazy" data-parallax alt="从文档混乱到可治理知识：审计、迁移、索引、执行的完整流程">
-            <figcaption><span></span> Authority graph · deterministic output</figcaption>
-          </figure>
+      <section class="section shell showcase" aria-labelledby="showcase-title">
+        <div class="showcase-copy" data-reveal>
+          <p class="section-tag">03 / GOVERNANCE MODEL</p>
+          <h2 id="showcase-title">从混乱到可信，<br>每一步都有边界。</h2>
+          <p>迁移旧知识、指定唯一权威、按需检索、归档证据。规则不是写在墙上的口号，而是进入自动化检查的系统约束。</p>
+          <a class="inline-link" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Governance-Model">阅读完整治理模型 <span aria-hidden="true">↗</span></a>
         </div>
+        <figure class="showcase-media" data-reveal>
+          <div class="media-bar"><span>DOCUMENTATION FLOW</span><code>v1.0</code></div>
+          <img src="./assets/readme-demo.png" width="1600" height="900" loading="lazy" alt="从文档混乱到可治理知识：审计、迁移、索引、执行的完整流程">
+          <figcaption><span>deterministic</span><span>auditable</span><span>agent-ready</span></figcaption>
+        </figure>
       </section>
 
-      <section class="toolkit section" id="toolkit">
-        <div class="shell toolkit-grid" data-reveal>
-          <div class="toolkit-copy">
-            <p class="kicker">ZERO-DEPENDENCY TOOLKIT</p>
-            <h2>克隆即用，先从只读审计开始</h2>
-            <p>推荐 Node.js 22 或 24。不需要安装 npm 依赖，审计过程不会修改目标仓库。</p>
-            <div class="compatibility">
-              <span>Node 22 / 24</span>
-              <span>Windows / Linux</span>
-              <span>CI ready</span>
-            </div>
+      <section class="toolkit" id="toolkit">
+        <div class="shell toolkit-grid">
+          <div class="toolkit-copy" data-reveal>
+            <p class="section-tag">04 / ZERO-DEPENDENCY TOOLKIT</p>
+            <h2>不安装依赖，<br>先跑一次只读审计。</h2>
+            <p>推荐 Node.js 22 或 24。工具不会修改目标仓库，适合先发现问题、评估范围，再决定如何治理。</p>
+            <ul>
+              <li><span>01</span> Windows + Linux</li>
+              <li><span>02</span> Node.js 22 + 24</li>
+              <li><span>03</span> No runtime dependencies</li>
+            </ul>
           </div>
-          <div class="terminal spotlight-card" aria-label="终端命令示例">
-            <div class="terminal-top"><span></span><span></span><span></span><b>terminal</b><button class="copy-command" type="button" data-copy="git clone https://github.com/CH-ZHOU-0512/govern-project-docs.git" aria-label="复制克隆命令">Copy</button></div>
-            <pre><code><span class="prompt">$</span> git clone https://github.com/<br>  CH-ZHOU-0512/govern-project-docs.git
-
+          <div class="terminal" data-reveal aria-label="终端命令示例">
+            <div class="terminal-bar"><span>TERMINAL</span><button class="copy-command" type="button" data-copy="git clone https://github.com/CH-ZHOU-0512/govern-project-docs.git" aria-label="复制克隆命令">COPY</button></div>
+            <pre><code><span class="comment"># Clone and run the read-only audit</span>
+<span class="prompt">$</span> git clone https://github.com/
+  CH-ZHOU-0512/govern-project-docs.git
 <span class="prompt">$</span> cd govern-project-docs
 <span class="prompt">$</span> node scripts/audit-docs.mjs --repo .
 
-<span class="dim">Documentation audit</span>
-  Markdown files      <span class="good">detected</span>
-  Local links         <span class="good">checked</span>
-  Authority signals   <span class="good">reported</span></code></pre>
+<span class="output">Documentation audit</span>
+  Missing metadata      <b>0</b>
+  Broken local links   <b>0</b>
+  Review candidates    <b>0</b>
+  Status               <strong>ready</strong></code></pre>
           </div>
         </div>
       </section>
 
-      <section class="cta shell section spotlight-card" data-reveal>
-        <div>
-          <p class="kicker">OPEN SOURCE · MIT</p>
-          <h2>让下一次迭代，不再增加文档债务</h2>
-          <p>安装为 Codex Skill，或直接把运行时工具接入现有仓库。</p>
-        </div>
-        <div class="cta-actions">
-          <a class="button button-primary" href="https://github.com/CH-ZHOU-0512/govern-project-docs">获取项目 <span aria-hidden="true">↗</span></a>
-          <a class="button button-secondary" href="https://github.com/CH-ZHOU-0512/govern-project-docs/discussions">加入讨论</a>
+      <section class="closing shell" data-reveal>
+        <p class="section-tag">OPEN SOURCE / MIT</p>
+        <div class="closing-grid">
+          <h2>让下一次迭代，<br>不再增加文档债务。</h2>
+          <div>
+            <p>安装为 Codex Skill，或把零依赖运行时工具接入现有仓库。</p>
+            <div class="closing-actions">
+              <a class="button button-accent" href="https://github.com/CH-ZHOU-0512/govern-project-docs">获取项目 <span aria-hidden="true">↗</span></a>
+              <a class="button button-outline" href="https://github.com/CH-ZHOU-0512/govern-project-docs/discussions">加入讨论</a>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
     <footer>
       <div class="shell footer-grid">
-        <div>
-          <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>govern-project-docs</span></a>
-          <p>Documentation governance for humans and AI agents.</p>
-        </div>
-        <div class="footer-links">
+        <div><strong>govern-project-docs</strong><p>Documentation governance for humans and AI agents.</p></div>
+        <nav aria-label="页脚导航">
           <a href="https://github.com/CH-ZHOU-0512/govern-project-docs">Repository</a>
           <a href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki">Wiki</a>
           <a href="https://github.com/CH-ZHOU-0512/govern-project-docs/discussions">Discussions</a>
           <a href="https://github.com/CH-ZHOU-0512">CH-ZHOU-0512</a>
-        </div>
+        </nav>
       </div>
     </footer>
   </body>

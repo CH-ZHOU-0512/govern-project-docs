@@ -18,6 +18,7 @@ test("Pages landing page exposes canonical and crawler metadata", async () => {
   assert.match(html, /"@type": "SoftwareSourceCode"/);
   assert.match(html, /OAI|AI Agent/);
   assert.match(html, /<script defer src="\.\/script\.js"><\/script>/);
+  assert.match(html, /assets\/share-cover-v2\.png/);
 });
 
 test("Pages motion remains progressive and respects reduced-motion preferences", async () => {
@@ -52,6 +53,7 @@ test("Pages workflow assembles every referenced media asset", async () => {
 
   await Promise.all([
     access(path.join(root, "assets/media/share-cover.png")),
+    access(path.join(root, "assets/media/share-cover-v2.png")),
     access(path.join(root, "assets/media/readme-demo.png")),
   ]);
 });

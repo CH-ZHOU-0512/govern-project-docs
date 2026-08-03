@@ -32,6 +32,7 @@ jobs:
           mkdir -p _site/assets
           cp -R site/. _site/
           cp assets/media/share-cover.png _site/assets/share-cover.png
+          cp assets/media/share-cover-v2.png _site/assets/share-cover-v2.png
           cp assets/media/readme-demo.png _site/assets/readme-demo.png
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v4
