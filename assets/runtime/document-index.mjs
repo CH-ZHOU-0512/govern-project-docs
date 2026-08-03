@@ -1,12 +1,18 @@
 import {
   existsSync,
   readFileSync,
+  statSync,
   watch,
 } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import console from "node:console";
 import process from "node:process";
-import { clearTimeout, setTimeout } from "node:timers";
+import {
+  clearInterval,
+  clearTimeout,
+  setInterval,
+  setTimeout,
+} from "node:timers";
 import { fileURLToPath } from "node:url";
 import {
   collectMarkdownFiles,
@@ -355,24 +361,62 @@ if (mode === "query") {
   execute(mode);
 } else {
   execute("generate");
+  const watchedSnapshot = () =>
+    collectMarkdownFiles(docsRoot)
+      .filter((path) => path !== markdownOutputPath)
+      .map((path) => {
+        try {
+          const statistics = statSync(path);
+          return `${repositoryPath(path)}\0${statistics.mtimeMs}\0${statistics.size}`;
+        } catch (error) {
+          if (error.code === "ENOENT") return undefined;
+          throw error;
+        }
+      })
+      .filter(Boolean)
+      .join("\n");
+  let snapshot = watchedSnapshot();
   let timer;
-  const watcher = watch(
-    docsRoot,
-    { recursive: true },
-    (_eventType, filename) => {
-      const path = normalizePath(filename ?? "");
-      const markdownOutput = normalizePath(
-        relative(docsRoot, markdownOutputPath),
+  const scheduleRefresh = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      execute("generate");
+      snapshot = watchedSnapshot();
+    }, 200);
+  };
+  let watcher;
+  if (process.env.DOCS_INDEX_FORCE_POLLING !== "1") {
+    try {
+      watcher = watch(
+        docsRoot,
+        { recursive: true },
+        (_eventType, filename) => {
+          const path = normalizePath(filename ?? "");
+          const markdownOutput = normalizePath(
+            relative(docsRoot, markdownOutputPath),
+          );
+          const jsonOutput = normalizePath(relative(docsRoot, jsonOutputPath));
+          if (!path || path === markdownOutput || path === jsonOutput) return;
+          scheduleRefresh();
+        },
       );
-      const jsonOutput = normalizePath(relative(docsRoot, jsonOutputPath));
-      if (!path || path === markdownOutput || path === jsonOutput) return;
-      clearTimeout(timer);
-      timer = setTimeout(() => execute("generate"), 200);
-    },
-  );
+    } catch (error) {
+      console.warn(
+        `Native file watching unavailable; using polling: ${error.message}`,
+      );
+    }
+  }
+  const poller = setInterval(() => {
+    const nextSnapshot = watchedSnapshot();
+    if (nextSnapshot === snapshot) return;
+    snapshot = nextSnapshot;
+    scheduleRefresh();
+  }, 500);
   console.log("Watching Markdown documents. Press Ctrl+C to stop.");
   process.on("SIGINT", () => {
-    watcher.close();
+    clearInterval(poller);
+    clearTimeout(timer);
+    watcher?.close();
     process.exit(0);
   });
 }

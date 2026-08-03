@@ -175,6 +175,7 @@ test("document index watch mode refreshes outputs", async (t) => {
   let stderr = "";
   const watcher = spawn(process.execPath, [indexScript, "watch", "--repo", root], {
     cwd: repositoryRoot,
+    env: { ...process.env, DOCS_INDEX_FORCE_POLLING: "1" },
     stdio: ["ignore", "pipe", "pipe"],
   });
   watcher.stdout.setEncoding("utf8");

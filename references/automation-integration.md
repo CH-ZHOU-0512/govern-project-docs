@@ -72,7 +72,7 @@ Expose the same four operations as the document index:
 - `query`: return a bounded subgraph for a path, symbol, domain, route, table, or event;
 - `watch`: refresh after relevant local source or manifest changes.
 
-Treat watch mode as developer feedback, not the correctness boundary. Pre-commit generation and CI `check` keep the shared repository current when no watcher is running. Store evidence on every edge—source path and, when stable, symbol or line—so AI can expand context from a small subgraph instead of reading the whole graph.
+Treat watch mode as developer feedback, not the correctness boundary. The document watcher combines native file events with a periodic snapshot fallback because recursive file events vary across operating systems and Node.js releases. Pre-commit generation and CI `check` keep the shared repository current when no watcher is running. Store evidence on every edge—source path and, when stable, symbol or line—so AI can expand context from a small subgraph instead of reading the whole graph.
 
 Keep graph adapters highly cohesive and loosely coupled: one parser per language or contract family, one normalized graph schema, and no adapter importing another adapter. If the target stack lacks a trustworthy parser, generate only package, contract, schema, and manifest relationships rather than guessing symbol edges.
 
