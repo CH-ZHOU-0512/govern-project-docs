@@ -73,7 +73,7 @@ Use three retrieval levels:
 
 ### 5. Install automation only when useful
 
-For a repository-wide governance setup, read [automation-integration.md](references/automation-integration.md), then adapt the assets rather than copying blindly.
+For a repository-wide governance setup, read [automation-integration.md](references/automation-integration.md). Use `govern-project-docs init --dry-run` to preview the standard file set when appropriate, then adapt the assets rather than copying blindly.
 
 Reusable assets:
 

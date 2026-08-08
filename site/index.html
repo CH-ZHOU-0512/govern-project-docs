@@ -209,7 +209,7 @@
           <a class="inline-link" href="https://github.com/CH-ZHOU-0512/govern-project-docs/wiki/Governance-Model">阅读完整治理模型 <span aria-hidden="true">↗</span></a>
         </div>
         <figure class="showcase-media" data-reveal>
-          <div class="media-bar"><span>DOCUMENTATION FLOW</span><code>v1.0</code></div>
+          <div class="media-bar"><span>DOCUMENTATION FLOW</span><code>v0.2</code></div>
           <img src="./assets/readme-demo.png" width="1600" height="900" loading="lazy" alt="从文档混乱到可治理知识：审计、迁移、索引、执行的完整流程">
           <figcaption><span>deterministic</span><span>auditable</span><span>agent-ready</span></figcaption>
         </figure>
@@ -218,22 +218,20 @@
       <section class="toolkit" id="toolkit">
         <div class="shell toolkit-grid">
           <div class="toolkit-copy" data-reveal>
-            <p class="section-tag">04 / ZERO-DEPENDENCY TOOLKIT</p>
-            <h2>不安装依赖，<br>先跑一次只读审计。</h2>
-            <p>推荐 Node.js 22 或 24。工具不会修改目标仓库，适合先发现问题、评估范围，再决定如何治理。</p>
+            <p class="section-tag">04 / ONE-COMMAND TOOLKIT</p>
+            <h2>一条命令，<br>先跑一次只读审计。</h2>
+            <p>推荐 Node.js 22 或 24。直接通过 npx 从 GitHub 运行；审计不会修改目标仓库，适合先发现问题、评估范围，再决定如何治理。</p>
             <ul>
               <li><span>01</span> Authority Engine / schema v2</li>
               <li><span>02</span> Windows + Linux / Node 22 + 24</li>
-              <li><span>03</span> No runtime dependencies</li>
+              <li><span>03</span> Atomic init / no runtime dependencies</li>
             </ul>
           </div>
           <div class="terminal" data-reveal aria-label="终端命令示例">
-            <div class="terminal-bar"><span>TERMINAL</span><button class="copy-command" type="button" data-copy="git clone https://github.com/CH-ZHOU-0512/govern-project-docs.git" aria-label="复制克隆命令">COPY</button></div>
-            <pre><code><span class="comment"># Clone and run the read-only audit</span>
-<span class="prompt">$</span> git clone https://github.com/
-  CH-ZHOU-0512/govern-project-docs.git
-<span class="prompt">$</span> cd govern-project-docs
-<span class="prompt">$</span> node scripts/audit-docs.mjs --repo .
+            <div class="terminal-bar"><span>TERMINAL</span><button class="copy-command" type="button" data-copy="npx github:CH-ZHOU-0512/govern-project-docs audit --repo ." aria-label="复制审计命令">COPY</button></div>
+            <pre><code><span class="comment"># Run the read-only audit without cloning</span>
+<span class="prompt">$</span> npx github:CH-ZHOU-0512/
+  govern-project-docs audit --repo .
 
 <span class="output">Documentation audit</span>
   Missing document IDs  <b>0</b>

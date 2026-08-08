@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Install package metadata
+        run: npm ci --ignore-scripts
+      - name: Validate release candidate
+        run: npm run validate
+      - name: Build npm-compatible package
+        id: pack
+        shell: bash
+        run: |
+          tarball="$(npm pack --ignore-scripts)"
+          echo "tarball=${tarball}" >> "${GITHUB_OUTPUT}"
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARBALL: ${{ steps.pack.outputs.tarball }}
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          notes_file=".github/release-notes/${tag}.md"
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            gh release upload "${tag}" "${TARBALL}" --clobber
+          elif [[ -f "${notes_file}" ]]; then
+            gh release create "${tag}" "${TARBALL}" --verify-tag --title "${tag}" --notes-file "${notes_file}"
+          else
+            gh release create "${tag}" "${TARBALL}" --verify-tag --title "${tag}" --generate-notes
+          fi

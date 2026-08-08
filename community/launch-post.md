@@ -36,11 +36,11 @@ Skill 会先只读审计仓库，梳理文档分类、权威来源、重复内�
 
 ### 2. 只读审计工具
 
-不需要安装 npm 依赖：
+不需要克隆仓库，也没有第三方运行时依赖：
 
 ```bash
-node scripts/audit-docs.mjs --repo /path/to/your-repository
-node scripts/audit-docs.mjs --repo /path/to/your-repository --json
+npx github:CH-ZHOU-0512/govern-project-docs audit --repo /path/to/your-repository
+npx github:CH-ZHOU-0512/govern-project-docs audit --repo /path/to/your-repository --json
 ```
 
 它会报告：
@@ -94,13 +94,13 @@ node scripts/check-markdown-links.mjs
 
 ## 快速体验
 
-只想先看看自己的仓库有什么问题，可以直接克隆后运行只读审计：
+只想先看看自己的仓库有什么问题，可以直接运行只读审计：
 
 ```bash
-git clone https://github.com/CH-ZHOU-0512/govern-project-docs.git
-cd govern-project-docs
-node scripts/audit-docs.mjs --repo /path/to/your-repository
+npx github:CH-ZHOU-0512/govern-project-docs audit --repo /path/to/your-repository
 ```
+
+确认要接入后，再用 `init --dry-run` 预览将要安装的脚本、Schema 和策略模板；默认遇到已有不同内容会整次停止，不会静默覆盖。
 
 作为 Codex Skill 安装后，可以这样调用：
 
@@ -116,7 +116,7 @@ node scripts/audit-docs.mjs --repo /path/to/your-repository
 - 零第三方运行时依赖；
 - 支持 Node.js 22 和 24；
 - GitHub Actions 覆盖 Ubuntu 和 Windows；
-- 当前 8 个 CLI/运行时测试全部通过；
+- 当前 19 个 CLI、运行时和 Pages 测试全部通过；
 - 索引生成、稳定 ID 查询、过期检查、watch 刷新、元数据规则、归档边界和复杂 Markdown 链接均有测试覆盖。
 
 ## 它暂时不做什么

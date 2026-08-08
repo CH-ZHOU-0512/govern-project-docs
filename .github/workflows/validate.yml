@@ -25,6 +25,7 @@ jobs:
           package-manager-cache: false
       - name: Check syntax
         run: |
+          node --check bin/govern-project-docs.mjs
           node --check scripts/audit-docs.mjs
           node --check assets/runtime/docs-toolkit.mjs
           node --check assets/runtime/document-index.mjs
@@ -32,6 +33,8 @@ jobs:
           node --check assets/runtime/check-markdown-links.mjs
       - name: Run tests
         run: node --test tests/*.test.mjs
+      - name: Verify package contents
+        run: npm pack --dry-run --ignore-scripts
       - name: Audit skill documentation
         run: node scripts/audit-docs.mjs --repo .
       - name: Check local links

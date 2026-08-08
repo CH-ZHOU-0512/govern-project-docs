@@ -2,6 +2,7 @@
 
 [![Validate](https://github.com/CH-ZHOU-0512/govern-project-docs/actions/workflows/validate.yml/badge.svg)](https://github.com/CH-ZHOU-0512/govern-project-docs/actions/workflows/validate.yml)
 [![Project site](https://img.shields.io/badge/GitHub%20Pages-Project%20site-6ee7d8?logo=github)](https://ch-zhou-0512.github.io/govern-project-docs/)
+[![Release](https://img.shields.io/github/v/release/CH-ZHOU-0512/govern-project-docs?display_name=tag)](https://github.com/CH-ZHOU-0512/govern-project-docs/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Codex Skill and zero-dependency Node.js toolkit for keeping repository documentation authoritative, searchable, and economical for humans and AI agents to read.
@@ -44,6 +45,29 @@ Repository documentation usually becomes difficult to trust for the same reasons
 
 ## Quick start
 
+### Run with npx
+
+Node.js 22 or newer is required. Run the CLI directly from GitHub without cloning the repository:
+
+```bash
+npx github:CH-ZHOU-0512/govern-project-docs audit --repo .
+npx github:CH-ZHOU-0512/govern-project-docs init --repo . --owner engineering
+npx github:CH-ZHOU-0512/govern-project-docs check --repo .
+```
+
+`audit` is read-only. `init` first preflights every target and stops without writing when an existing file differs. Review those files or explicitly use `--force`; use `--dry-run` to preview a clean installation. A successful initialization installs the runtime, schema, and starter policies, then generates the initial document index.
+
+Available commands:
+
+| Command | Purpose |
+| --- | --- |
+| `init` | Install governance files safely and generate the initial index. |
+| `audit` | Report documentation structure and risks without modifying files. |
+| `check` | Run Authority Engine, index freshness, and Markdown link checks. |
+| `index` | Generate, check, query, or watch the bounded document index. |
+| `governance` | Run only metadata, authority, lifecycle, and archive rules. |
+| `links` | Run only local Markdown target validation. |
+
 ### Install as a Codex Skill
 
 Clone the repository into your Codex skills directory.
@@ -68,7 +92,7 @@ Then ask Codex to use `$govern-project-docs`, for example:
 
 ### Run a read-only audit
 
-Node.js 22 or 24 is recommended. No package installation is required.
+The cloned repository still supports the original direct-script workflow:
 
 ```bash
 node scripts/audit-docs.mjs --repo /path/to/target-repository
@@ -111,7 +135,7 @@ superseded-by: DOC-PAYMENTS-V2
 
 ## Install the automation in another repository
 
-Copy the following runtime files as a unit because the three CLIs import `docs-toolkit.mjs`:
+The recommended path is the atomic `init` command shown above. For a manual or highly customized integration, copy the following runtime files as a unit because the three CLIs import `docs-toolkit.mjs`:
 
 ```text
 assets/runtime/docs-toolkit.mjs
@@ -146,6 +170,7 @@ node scripts/check-markdown-links.mjs
 .
 ├── SKILL.md                 # Codex workflow and operating rules
 ├── agents/openai.yaml       # Skill display metadata
+├── bin/                     # npx command router and safe initializer
 ├── scripts/                 # Read-only repository audit
 ├── assets/runtime/          # Reusable documentation CLIs
 ├── assets/templates/        # Policies, config, schema, record templates
@@ -158,14 +183,8 @@ node scripts/check-markdown-links.mjs
 Run the same local checks used by CI:
 
 ```bash
-node --check scripts/audit-docs.mjs
-node --check assets/runtime/docs-toolkit.mjs
-node --check assets/runtime/document-index.mjs
-node --check assets/runtime/check-doc-governance.mjs
-node --check assets/runtime/check-markdown-links.mjs
-node --test tests/*.test.mjs
-node scripts/audit-docs.mjs --repo .
-node assets/runtime/check-markdown-links.mjs --repo .
+npm run validate
+npm pack --dry-run --ignore-scripts
 ```
 
 GitHub Actions validates Node.js 22 and 24 on both Ubuntu and Windows.

@@ -17,6 +17,7 @@ test("Pages landing page exposes canonical and crawler metadata", async () => {
   assert.match(html, /<meta name="robots" content="index, follow,/);
   assert.match(html, /"@type": "SoftwareSourceCode"/);
   assert.match(html, /OAI|AI Agent/);
+  assert.match(html, /npx github:CH-ZHOU-0512\/govern-project-docs/);
   assert.match(html, /<script defer src="\.\/script\.js"><\/script>/);
   assert.match(html, /assets\/share-cover-v2\.png/);
 });

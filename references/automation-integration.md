@@ -4,7 +4,17 @@ Use this reference when installing persistent scripts, CI checks, hooks, or a co
 
 ## Runtime assets
 
-Copy and adapt these files into the target repository with `apply_patch`:
+For a new installation, prefer the package CLI because it preflights the complete file set before writing anything:
+
+```bash
+npx github:CH-ZHOU-0512/govern-project-docs init --repo . --owner engineering --dry-run
+npx github:CH-ZHOU-0512/govern-project-docs init --repo . --owner engineering
+npx github:CH-ZHOU-0512/govern-project-docs check --repo .
+```
+
+The first command previews the installation. The second installs the runtime, schema, starter policies, and initial deterministic index. If any target differs, initialization stops before writing; `--force` is intentionally required to replace existing content.
+
+For a manual or project-specific installation, copy and adapt these files with `apply_patch`:
 
 | Skill asset                                    | Suggested target                      |
 | ---------------------------------------------- | ------------------------------------- |

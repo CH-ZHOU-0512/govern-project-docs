@@ -1,0 +1,47 @@
+{
+  "name": "govern-project-docs",
+  "version": "0.2.0",
+  "description": "Zero-dependency documentation governance and authority tooling for humans and AI agents.",
+  "type": "module",
+  "bin": {
+    "govern-project-docs": "bin/govern-project-docs.mjs"
+  },
+  "files": [
+    "assets/runtime",
+    "assets/templates",
+    "bin",
+    "scripts/audit-docs.mjs",
+    "CHANGELOG.md",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check:syntax": "node --check bin/govern-project-docs.mjs && node --check scripts/audit-docs.mjs && node --check assets/runtime/docs-toolkit.mjs && node --check assets/runtime/document-index.mjs && node --check assets/runtime/check-doc-governance.mjs && node --check assets/runtime/check-markdown-links.mjs",
+    "check:docs": "node scripts/audit-docs.mjs --repo . && node assets/runtime/check-markdown-links.mjs --repo .",
+    "validate": "npm run check:syntax && npm test && npm run check:docs",
+    "prepack": "npm run validate"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CH-ZHOU-0512/govern-project-docs.git"
+  },
+  "homepage": "https://ch-zhou-0512.github.io/govern-project-docs/",
+  "bugs": {
+    "url": "https://github.com/CH-ZHOU-0512/govern-project-docs/issues"
+  },
+  "keywords": [
+    "ai-agents",
+    "codex",
+    "documentation",
+    "governance",
+    "markdown"
+  ],
+  "author": "CH-ZHOU-0512",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
